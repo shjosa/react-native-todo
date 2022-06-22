@@ -23,6 +23,7 @@ export const TaskList = () => {
     function addTask(task: string) {
         const taskId = id.current + 1;
         const tempArr = [...taskArr, { key: taskId, taskName: task, isCompleted: false }];
+        setTaskText("");
         setTaskArr(tempArr);
         id.current = taskId;
         setTasks(tempArr);
