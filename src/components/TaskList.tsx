@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TextInput, Button, View, Text, StyleSheet } from 'react-native';
-import { Task } from './Task';
+import { Task, TaskItem } from './Task';
 
 export const TaskList = () => {
     const [taskArr, setTaskArr] = useState<Array<Task>>([]);
@@ -25,6 +25,13 @@ export const TaskList = () => {
         id.current = taskId;
     }
 
+    function removeTask(key: number) {
+        const tempArr = [...taskArr];
+        const pos = tempArr.findIndex(task => task.key === key);
+        tempArr.splice(pos, 1);
+        setTaskArr(tempArr);
+    }
+
     return (
         <>
             <TextInput style={styles.bg} onChangeText={setTaskText} value={taskText}></TextInput>
@@ -32,10 +39,7 @@ export const TaskList = () => {
 
             {
                 taskArr.map((task) => (
-                    <View style={styles.taskList} key={task.key}>
-                        <Text>{task.taskName}</Text>
-                        <Button title="Remove Task"></Button>
-                    </View>
+                    <TaskItem removeTask={removeTask} task={task}/>
                 ))
             }
         </>
@@ -44,11 +48,6 @@ export const TaskList = () => {
 
 const styles = StyleSheet.create({
     bg: {
-      backgroundColor: "blue",
+      backgroundColor: "lightblue",
     },
-    taskList: {
-      paddingHorizontal: "2%",
-      flexDirection: "row",
-      justifyContent: "space-between",
-    }
   });
