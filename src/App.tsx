@@ -1,105 +1,68 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section: React.FC<{
-  title: string;
-}> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+type Task = {
+  key: number,
+  taskName:  string,
+  isCompleted: boolean,
+}
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const [taskArr, setTaskArr] = useState<Array<Task>>([]);
+  const [taskText, setTaskText] = useState("");
+  const id = useRef(0);
+
+  useEffect(() => {
+    const newArr = taskArr;
+    let highestKey = 0;
+    for (let i = 0; i < newArr.length; i++) {
+      if (newArr[i].key > highestKey)
+        highestKey = newArr[i].key;
+    }
+    id.current = highestKey;
+    setTaskArr(newArr);
+  }, []);
+
+  function addTask(task: string) {
+    const taskId = id.current + 1;
+    const tempArr = [...taskArr, { key: taskId, taskName: task, isCompleted: false }];
+    setTaskArr(tempArr);
+    id.current = taskId;
+  }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView >
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+      <TextInput style={styles.bg} onChangeText={setTaskText} value={taskText}></TextInput>
+      <Button title="Add Task" onPress={() => addTask(taskText)}></Button>
+
+      {taskArr.map((task) => (
+        <Text key={task.key}>{task.taskName}</Text>
+      ))
+      }
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  text: {
+    color: "red",
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+  bg: {
+    backgroundColor: "blue",
+  }
 });
 
 export default App;
