@@ -49,7 +49,10 @@ const App = () => {
       <Button title="Add Task" onPress={() => addTask(taskText)}></Button>
 
       {taskArr.map((task) => (
-        <Text key={task.key}>{task.taskName}</Text>
+        <View style={styles.taskList}>
+          <Text key={task.key}>{task.taskName}</Text>
+          <Button title="Remove Task"></Button>
+        </View>
       ))
       }
     </SafeAreaView>
@@ -62,6 +65,11 @@ const styles = StyleSheet.create({
   },
   bg: {
     backgroundColor: "blue",
+  },
+  taskList: {
+    paddingHorizontal: "2%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   }
 });
 
