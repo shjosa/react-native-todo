@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TextInput, Button, View, Text, StyleSheet } from 'react-native';
-import { Task, TaskItem } from './Task';
+import { TaskItem } from './TaskItem';
+import { Task, getTasks, setTasks } from '../api/tasks';
 
 export const TaskList = () => {
     const [taskArr, setTaskArr] = useState<Array<Task>>([]);
@@ -8,14 +9,15 @@ export const TaskList = () => {
     const id = useRef(0);
 
     useEffect(() => {
-        const newArr = taskArr;
-        let highestKey = 0;
-        for (let i = 0; i < newArr.length; i++) {
-            if (newArr[i].key > highestKey)
-                highestKey = newArr[i].key;
-        }
-        id.current = highestKey;
-        setTaskArr(newArr);
+        getTasks().then((newArr) => {
+            let highestKey = 0;
+            for (let i = 0; i < newArr.length; i++) {
+                if (newArr[i].key > highestKey)
+                    highestKey = newArr[i].key;
+            }
+            id.current = highestKey;
+            setTaskArr(newArr);
+        }).catch(console.error);
     }, []);
 
     function addTask(task: string) {
@@ -23,6 +25,7 @@ export const TaskList = () => {
         const tempArr = [...taskArr, { key: taskId, taskName: task, isCompleted: false }];
         setTaskArr(tempArr);
         id.current = taskId;
+        setTasks(tempArr);
     }
 
     function removeTask(key: number) {
@@ -30,6 +33,7 @@ export const TaskList = () => {
         const pos = tempArr.findIndex(task => task.key === key);
         tempArr.splice(pos, 1);
         setTaskArr(tempArr);
+        setTasks(tempArr);
     }
 
     return (
@@ -39,7 +43,7 @@ export const TaskList = () => {
 
             {
                 taskArr.map((task) => (
-                    <TaskItem removeTask={removeTask} task={task}/>
+                    <TaskItem removeTask={removeTask} task={task} key={task.key}/>
                 ))
             }
         </>
@@ -48,6 +52,6 @@ export const TaskList = () => {
 
 const styles = StyleSheet.create({
     bg: {
-      backgroundColor: "lightblue",
+        backgroundColor: "lightblue",
     },
-  });
+});

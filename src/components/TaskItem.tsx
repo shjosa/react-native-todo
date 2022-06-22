@@ -1,11 +1,6 @@
 import React from 'react';
 import { Button, View, Text, StyleSheet } from 'react-native';
-
-export type Task = {
-    key: number,
-    taskName: string,
-    isCompleted: boolean,
-}
+import { Task } from '../api/tasks';
 
 type TaskItemProps = {
     removeTask: (key: number) => void,
