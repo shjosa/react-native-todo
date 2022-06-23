@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { TextInput, Button, View, Text, StyleSheet } from 'react-native';
 import { TaskItem } from './TaskItem';
+import { TaskSection } from './TaskSection';
 import { Task, getTasks, setTasks } from '../api/tasks';
 
 export const TaskList = () => {
@@ -53,11 +54,8 @@ export const TaskList = () => {
             <TextInput style={styles.bg} onChangeText={setTaskText} value={taskText}></TextInput>
             <Button title="Add Task" onPress={() => addTask(taskText)}></Button>
 
-            {
-                taskArr.map((task) => (
-                    <TaskItem removeTask={removeTask} toggleCompleted={toggleCompleted} task={task} key={task.key}/>
-                ))
-            }
+            <TaskSection sectionTitle='Active' sectionArr={activeTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
+            <TaskSection sectionTitle='Completed' sectionArr={completedTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
         </>
     )
 }
