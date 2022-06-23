@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { TextInput, Button, View, Text, StyleSheet } from 'react-native';
 import { TaskItem } from './TaskItem';
 import { Task, getTasks, setTasks } from '../api/tasks';
@@ -7,6 +7,9 @@ export const TaskList = () => {
     const [taskArr, setTaskArr] = useState<Array<Task>>([]);
     const [taskText, setTaskText] = useState("");
     const id = useRef(0);
+
+    const activeTasks = useMemo(() => taskArr.filter(task => !task.isCompleted), [taskArr]);
+    const completedTasks = useMemo(() => taskArr.filter(task => task.isCompleted), [taskArr]);
 
     useEffect(() => {
         getTasks().then((newArr) => {
@@ -37,6 +40,14 @@ export const TaskList = () => {
         setTasks(tempArr);
     }
 
+    function toggleCompleted(key: number) {
+        const tempArr = [...taskArr];
+        const pos = tempArr.findIndex(task => task.key === key);
+        tempArr[pos].isCompleted = !tempArr[pos].isCompleted;
+        setTaskArr(tempArr);
+        setTasks(tempArr);
+    }
+
     return (
         <>
             <TextInput style={styles.bg} onChangeText={setTaskText} value={taskText}></TextInput>
@@ -44,7 +55,7 @@ export const TaskList = () => {
 
             {
                 taskArr.map((task) => (
-                    <TaskItem removeTask={removeTask} task={task} key={task.key}/>
+                    <TaskItem removeTask={removeTask} toggleCompleted={toggleCompleted} task={task} key={task.key}/>
                 ))
             }
         </>
