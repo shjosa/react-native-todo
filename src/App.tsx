@@ -16,7 +16,7 @@ const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <SafeAreaView >
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <TaskList />
     </SafeAreaView>
@@ -24,6 +24,9 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+  },
 });
 
 export default App;

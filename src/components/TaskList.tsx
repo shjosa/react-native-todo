@@ -3,6 +3,7 @@ import { TextInput, Button, View, Text, StyleSheet } from 'react-native';
 import { TaskItem } from './TaskItem';
 import { TaskSection } from './TaskSection';
 import { Task, getTasks, setTasks } from '../api/tasks';
+import { AnimatedFAB, Appbar } from 'react-native-paper';
 
 export const TaskList = () => {
     const [taskArr, setTaskArr] = useState<Array<Task>>([]);
@@ -51,17 +52,34 @@ export const TaskList = () => {
 
     return (
         <>
-            <TextInput style={styles.bg} onChangeText={setTaskText} value={taskText}></TextInput>
-            <Button title="Add Task" onPress={() => addTask(taskText)}></Button>
+            <Appbar.Header>
+                <Appbar.Content title="React Native Todo" />
+            </Appbar.Header>
 
             <TaskSection sectionTitle='Active' sectionArr={activeTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
             <TaskSection sectionTitle='Completed' sectionArr={completedTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
+
+            <AnimatedFAB 
+                icon={'plus'}
+                label={'Add Task'}
+                extended={true}
+                style={styles.addTaskFab}
+                animateFrom={'left'}
+            />
         </>
     )
 }
+
+// <TextInput style={styles.bg} onChangeText={setTaskText} value={taskText}></TextInput>
+// <Button title="Add Task" onPress={() => addTask(taskText)}></Button>
 
 const styles = StyleSheet.create({
     bg: {
         backgroundColor: "lightblue",
     },
+    addTaskFab: {
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
+    }
 });

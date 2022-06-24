@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { Card } from 'react-native-paper';
 import { Task } from '../api/tasks';
 import { TaskItem } from './TaskItem';
 
@@ -15,12 +16,16 @@ export const TaskSection = ({ sectionTitle, sectionArr, removeTask, toggleComple
         return null;
     return (
         <>
-            <Text>{sectionTitle}</Text>
-            {
-                sectionArr.map((task) => (
-                    <TaskItem removeTask={removeTask} toggleCompleted={toggleCompleted} task={task} key={task.key}/>
-                ))
-            }
+            <Card mode='outlined'>
+                <Card.Title title={sectionTitle} />
+                <Card.Content>
+                    {
+                        sectionArr.map((task) => (
+                            <TaskItem removeTask={removeTask} toggleCompleted={toggleCompleted} task={task} key={task.key}/>
+                        ))
+                    }
+                </Card.Content>
+            </Card>
         </>
     );
 }
