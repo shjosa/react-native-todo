@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { TextInput, Button, View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { TaskItem } from './TaskItem';
 import { TaskSection } from './TaskSection';
 import { Task, getTasks, setTasks } from '../api/tasks';
-import { AnimatedFAB, Appbar } from 'react-native-paper';
+import { AnimatedFAB, Appbar, Button, Modal, Portal, TextInput } from 'react-native-paper';
 
 export const TaskList = () => {
     const [taskArr, setTaskArr] = useState<Array<Task>>([]);
     const [taskText, setTaskText] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
     const id = useRef(0);
 
     const activeTasks = useMemo(() => taskArr.filter(task => !task.isCompleted), [taskArr]);
@@ -25,6 +26,8 @@ export const TaskList = () => {
         }).catch(console.error);
     }, []);
 
+    const toggleModalVisibility = () => setModalVisible(!modalVisible);
+
     function addTask(task: string) {
         const taskId = id.current + 1;
         const tempArr = [...taskArr, { key: taskId, taskName: task, isCompleted: false }];
@@ -32,6 +35,7 @@ export const TaskList = () => {
         setTaskArr(tempArr);
         id.current = taskId;
         setTasks(tempArr);
+        toggleModalVisibility();
     }
 
     function removeTask(key: number) {
@@ -59,12 +63,27 @@ export const TaskList = () => {
             <TaskSection sectionTitle='Active' sectionArr={activeTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
             <TaskSection sectionTitle='Completed' sectionArr={completedTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
 
+            <Portal>
+                <Modal 
+                    visible={modalVisible} 
+                    onDismiss={toggleModalVisibility} 
+                    contentContainerStyle={styles.modalContainer}
+                >
+                    <TextInput 
+                        value={taskText} 
+                        onChangeText={setTaskText}
+                    />
+                    <Button onPress={() => addTask(taskText)}>Add Task</Button>
+                </Modal>
+            </Portal>
+
             <AnimatedFAB 
                 icon={'plus'}
                 label={'Add Task'}
                 extended={true}
                 style={styles.addTaskFab}
                 animateFrom={'left'}
+                onPress={toggleModalVisibility}
             />
         </>
     )
@@ -81,5 +100,10 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 16,
         right: 16,
-    }
+    },
+    modalContainer: {
+        backgroundColor: 'white',
+        padding: 20,
+        marginHorizontal: '5%',
+    },
 });
