@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, View, Text, StyleSheet } from 'react-native';
-import { Checkbox } from 'react-native-paper';
+import { View, Text, StyleSheet } from 'react-native';
+import { IconButton, Checkbox } from 'react-native-paper';
 import { Task } from '../api/tasks';
 
 type TaskItemProps = {
@@ -16,8 +16,8 @@ export const TaskItem = ({removeTask, toggleCompleted, task}: TaskItemProps) => 
                 status={task.isCompleted ? 'checked' : 'unchecked'}
                 onPress={() => toggleCompleted(task.key)}
             />
-            <Text>{task.taskName}</Text>
-            <Button title="Remove Task" onPress={() => removeTask(task.key)}></Button>
+            <Text style={styles.taskName}>{task.taskName}</Text>
+            <IconButton icon={'delete'} onPress={() => removeTask(task.key)}></IconButton>
         </View>
     )
 }
@@ -27,5 +27,11 @@ const styles = StyleSheet.create({
       paddingHorizontal: "2%",
       flexDirection: "row",
       justifyContent: "space-between",
-    }
+      alignItems: 'center',
+      marginVertical: 2,
+    },
+    taskName: {
+        width: 1,
+        flexGrow: 1,
+    },
   });

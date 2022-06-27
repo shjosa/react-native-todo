@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Provider as PaperProvider } from 'react-native-paper'
 import {
   Button,
   SafeAreaView,
@@ -18,7 +19,9 @@ const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <TaskList />
+      <PaperProvider>
+        <TaskList />
+      </PaperProvider>
     </SafeAreaView>
   );
 };

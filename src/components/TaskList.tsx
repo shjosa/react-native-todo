@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollViewBase, ScrollView } from 'react-native';
 import { TaskItem } from './TaskItem';
 import { TaskSection } from './TaskSection';
 import { Task, getTasks, setTasks } from '../api/tasks';
-import { AnimatedFAB, Appbar, Button, Modal, Portal, TextInput } from 'react-native-paper';
+import { FAB, Appbar, Button, Modal, Portal, TextInput } from 'react-native-paper';
 
 export const TaskList = () => {
     const [taskArr, setTaskArr] = useState<Array<Task>>([]);
     const [taskText, setTaskText] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
+    const [isExtended, setIsExtended] = useState(true);
     const id = useRef(0);
 
     const activeTasks = useMemo(() => taskArr.filter(task => !task.isCompleted), [taskArr]);
@@ -27,6 +28,10 @@ export const TaskList = () => {
     }, []);
 
     const toggleModalVisibility = () => setModalVisible(!modalVisible);
+    const dismissModal = () => {
+        setTaskText("");
+        setModalVisible(false);
+    }
 
     function addTask(task: string) {
         const taskId = id.current + 1;
@@ -60,13 +65,15 @@ export const TaskList = () => {
                 <Appbar.Content title="React Native Todo" />
             </Appbar.Header>
 
-            <TaskSection sectionTitle='Active' sectionArr={activeTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
-            <TaskSection sectionTitle='Completed' sectionArr={completedTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
+            <ScrollView contentContainerStyle={styles.listSpacing}>
+                <TaskSection sectionTitle='Active' sectionArr={activeTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
+                <TaskSection sectionTitle='Completed' sectionArr={completedTasks} removeTask={removeTask} toggleCompleted={toggleCompleted} />
+            </ScrollView>
 
             <Portal>
                 <Modal 
                     visible={modalVisible} 
-                    onDismiss={toggleModalVisibility} 
+                    onDismiss={dismissModal} 
                     contentContainerStyle={styles.modalContainer}
                 >
                     <TextInput 
@@ -77,20 +84,14 @@ export const TaskList = () => {
                 </Modal>
             </Portal>
 
-            <AnimatedFAB 
+            <FAB 
                 icon={'plus'}
-                label={'Add Task'}
-                extended={true}
                 style={styles.addTaskFab}
-                animateFrom={'left'}
                 onPress={toggleModalVisibility}
             />
         </>
     )
 }
-
-// <TextInput style={styles.bg} onChangeText={setTaskText} value={taskText}></TextInput>
-// <Button title="Add Task" onPress={() => addTask(taskText)}></Button>
 
 const styles = StyleSheet.create({
     bg: {
@@ -106,4 +107,7 @@ const styles = StyleSheet.create({
         padding: 20,
         marginHorizontal: '5%',
     },
+    listSpacing: {
+        paddingBottom: 90,
+    }
 });
