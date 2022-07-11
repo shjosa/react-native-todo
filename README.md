@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="" scr="./android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
+    <img alt="" src="./android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
 </p>
 <h1 align="center">
     React Native Todo
