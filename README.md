@@ -14,6 +14,7 @@ While iOS is included in the code, this project was only tested with Android.
 
 ## Technologies Used
 - [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 - [React Native](https://reactnative.dev/)
 - [React Native Paper](https://reactnativepaper.com/)
 - [React Native Default Preference](https://github.com/kevinresol/react-native-default-preference)
